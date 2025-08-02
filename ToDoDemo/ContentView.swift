@@ -13,27 +13,32 @@ import SwiftUI
 // right: trailing
 struct ContentView: View {
     @State var newTaskTitle = ""
+    @StateObject private var todoStore = ToDoStore()
     var body: some View {
         NavigationView {
             VStack {
                 List {
-                    Text("One")
+                    ForEach(todoStore.todos) { todo in
+                        TodoRowView(todo: todo) {
+                            todoStore.toggleComplete(for: todo)
+                        }
                         .swipeActions(edge: .trailing) {
                             Button("Delete", role: .destructive) {
-                                print("deleted")
+                                if let index = todoStore.todos.firstIndex(where: { $0.id == todo.id }) {
+                                    todoStore.deleteTodo(at: IndexSet(integer: index))
+                                }
                             }
                         }
-                    Text("Two")
-                        .swipeActions(edge: .leading) {
-                            Button("Update") {
-                                print("updated")
-                            }
-                        }
+                    }
+                    
                 }
                 HStack {
+                    // TODO: - Need to clear text after add to user preference
+                    // TODO: - Block same title in task
                     TextField("Add new task", text: $newTaskTitle)
                     Button("Add") {
                         print("Added - \(newTaskTitle)")
+                        todoStore.addTodo(title: newTaskTitle)
                     }
                     .disabled(newTaskTitle.isEmpty)
                 }

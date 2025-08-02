@@ -13,5 +13,8 @@ struct ToDoDemoApp: App {
         WindowGroup {
             ContentView()
         }
+        
+        // Observe notification
+        // Listen notification
     }
 }
