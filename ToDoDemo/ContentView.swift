@@ -33,12 +33,16 @@ struct ContentView: View {
                     
                 }
                 HStack {
-                    // TODO: - Need to clear text after add to user preference
-                    // TODO: - Block same title in task
                     TextField("Add new task", text: $newTaskTitle)
                     Button("Add") {
                         print("Added - \(newTaskTitle)")
-                        todoStore.addTodo(title: newTaskTitle)
+                        let hasSameTitle = todoStore.todos.contains {
+                            $0.title == newTaskTitle
+                        }
+                        if !hasSameTitle {
+                            todoStore.addTodo(title: newTaskTitle)
+                        }
+                        self.newTaskTitle = ""
                     }
                     .disabled(newTaskTitle.isEmpty)
                 }
